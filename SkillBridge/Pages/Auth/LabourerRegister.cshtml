@@ -1,0 +1,225 @@
+@page
+@model LabourerRegisterModel
+@{
+    Layout = "_AuthLayout";
+    ViewData["Title"] = "Labourer Registration";
+    var step = Model.Step;
+    var totalSteps = 4;
+    string[] stepLabels = { "Account", "Skills", "Availability", "Location" };
+}
+
+
+<!-- Registration Card -->
+<div class="glass-card auth-card auth-card--wide reg-card">
+    <!-- Logo + Title -->
+    <div class="reg-card__header">
+        <div class="reg-card__icon">
+            <i class="fa-solid fa-hard-hat"></i>
+        </div>
+        <h1 class="auth-card__title">Labourer Registration</h1>
+        <p class="auth-card__subtitle">Step @step of @totalSteps — @stepLabels[step - 1]</p>
+    </div>
+
+    <!-- Step Progress Bar -->
+    <div class="steps-indicator" role="progressbar" aria-valuenow="@step" aria-valuemax="@totalSteps">
+        <div class="steps-indicator__progress" style="width: @(((step - 1) * 100 / (totalSteps - 1)))%"></div>
+        @for (int i = 1; i <= totalSteps; i++)
+        {
+            var nodeClass = i < step ? "step-indicator-node completed" : (i == step ? "step-indicator-node active" : "step-indicator-node");
+            <div class="@nodeClass" title="@stepLabels[i - 1]">
+                @if (i < step)
+                {
+                    <i class="fa-solid fa-check"></i>
+                }
+                else
+                {
+                    @i
+                }
+            </div>
+        }
+    </div>
+
+    <!-- Multi-step Form -->
+    <form method="post" autocomplete="off" id="reg-form">
+        <input type="hidden" name="Step" value="@step" />
+
+        @* ─────────── STEP 1 — Account Info ─────────── *@
+        @if (step == 1)
+        {
+            <div class="form-group">
+                <label asp-for="Input.FullName">Full Name</label>
+                <div class="input-wrapper">
+                    <i class="fa-solid fa-user input-icon"></i>
+                    <input asp-for="Input.FullName" class="input-field input-field--icon" placeholder="e.g. Ali Hassan" autocomplete="name" />
+                </div>
+                <span asp-validation-for="Input.FullName" class="form-error"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Input.Email">Email Address</label>
+                <div class="input-wrapper">
+                    <i class="fa-solid fa-envelope input-icon"></i>
+                    <input asp-for="Input.Email" class="input-field input-field--icon" type="email" placeholder="you@example.com" autocomplete="email" />
+                </div>
+                <span asp-validation-for="Input.Email" class="form-error"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Input.Phone">Phone Number</label>
+                <div class="input-wrapper">
+                    <i class="fa-solid fa-phone input-icon"></i>
+                    <input asp-for="Input.Phone" class="input-field input-field--icon" type="tel" placeholder="+92 300 0000000" autocomplete="tel" />
+                </div>
+                <span asp-validation-for="Input.Phone" class="form-error"></span>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label asp-for="Input.Password">Password</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-lock input-icon"></i>
+                        <input asp-for="Input.Password" class="input-field input-field--icon" type="password" placeholder="Min 6 characters" autocomplete="new-password" />
+                    </div>
+                    <span asp-validation-for="Input.Password" class="form-error"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Input.ConfirmPassword">Confirm Password</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-lock input-icon"></i>
+                        <input asp-for="Input.ConfirmPassword" class="input-field input-field--icon" type="password" placeholder="Repeat password" autocomplete="new-password" />
+                    </div>
+                    <span asp-validation-for="Input.ConfirmPassword" class="form-error"></span>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-full" id="btn-step1">
+                Continue <i class="fa-solid fa-arrow-right"></i>
+            </button>
+
+            <p class="auth-card__footer">Already have an account? <a href="/Auth/LabourerLogin">Sign In</a></p>
+        }
+
+        @* ─────────── STEP 2 — Skills ─────────── *@
+        else if (step == 2)
+        {
+            <div class="form-group">
+                <label asp-for="Input.CategoryId">Trade / Category</label>
+                <div class="input-wrapper">
+                    <i class="fa-solid fa-toolbox input-icon"></i>
+                    <select asp-for="Input.CategoryId" class="input-field input-field--icon" asp-items="Model.CategoryOptions">
+                        <option value="">— Select a trade —</option>
+                    </select>
+                </div>
+                <span asp-validation-for="Input.CategoryId" class="form-error"></span>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label asp-for="Input.ExperienceYears">Years of Experience</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-briefcase input-icon"></i>
+                        <input asp-for="Input.ExperienceYears" class="input-field input-field--icon" type="number" min="0" max="60" placeholder="e.g. 5" />
+                    </div>
+                    <span asp-validation-for="Input.ExperienceYears" class="form-error"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Input.HourlyRate">Hourly Rate (PKR)</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-money-bill-wave input-icon"></i>
+                        <input asp-for="Input.HourlyRate" class="input-field input-field--icon" type="number" step="50" min="0" placeholder="e.g. 500" />
+                    </div>
+                    <span asp-validation-for="Input.HourlyRate" class="form-error"></span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Input.Bio">Bio / Description</label>
+                <textarea asp-for="Input.Bio" class="input-field" rows="4" placeholder="Describe your skills, experience, and what makes you a great hire..."></textarea>
+                <span asp-validation-for="Input.Bio" class="form-error"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-full" id="btn-step2">
+                Continue <i class="fa-solid fa-arrow-right"></i>
+            </button>
+        }
+
+        @* ─────────── STEP 3 — Availability ─────────── *@
+        else if (step == 3)
+        {
+            <p class="step-hint">Select the days you are available and set your working hours.</p>
+            <div class="avail-table">
+                <div class="avail-table__head">
+                    <span>Day</span>
+                    <span>Available?</span>
+                    <span>From</span>
+                    <span>To</span>
+                </div>
+                @foreach (var day in Model.DaysOfWeek)
+                {
+                    bool isChecked = Model.Input.AvailableDays != null && Model.Input.AvailableDays.Contains(day);
+                    <div class="avail-table__row">
+                        <span class="avail-day">@day</span>
+                        <label class="avail-toggle">
+                            <input type="checkbox" name="Input.AvailableDays" value="@day" class="avail-checkbox" @(isChecked ? "checked" : "") />
+                            <span class="avail-toggle__track"></span>
+                        </label>
+                        <input type="time" name="Input.StartTimes[@day]"
+                               value="@(Model.Input.StartTimes?.GetValueOrDefault(day) ?? "08:00")"
+                               class="input-field avail-time" />
+                        <input type="time" name="Input.EndTimes[@day]"
+                               value="@(Model.Input.EndTimes?.GetValueOrDefault(day) ?? "17:00")"
+                               class="input-field avail-time" />
+                    </div>
+                }
+            </div>
+            <button type="submit" class="btn btn-primary btn-full" id="btn-step3">
+                Continue <i class="fa-solid fa-arrow-right"></i>
+            </button>
+        }
+
+        @* ─────────── STEP 4 — Location ─────────── *@
+        else if (step == 4)
+        {
+            <p class="step-hint">Click on the map to set your work location. This helps customers find you nearby.</p>
+            <div class="map-picker-container" id="map-wrapper">
+                <div id="map" class="map-picker"></div>
+            </div>
+            <div class="coords-display" id="coords-display" style="display:none">
+                <i class="fa-solid fa-location-dot"></i>
+                <span id="coords-text">No location selected</span>
+            </div>
+            <input type="hidden" asp-for="Input.Latitude" id="Input_Latitude" />
+            <input type="hidden" asp-for="Input.Longitude" id="Input_Longitude" />
+
+            <button type="submit" class="btn btn-primary btn-full" id="btn-step4">
+                <i class="fa-solid fa-check"></i> Complete Registration
+            </button>
+        }
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    @if (step == 4)
+    {
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+        <script>
+            const map = L.map('map').setView([30.3753, 69.3451], 6);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+            let marker;
+            map.on('click', function(e) {
+                if (marker) map.removeLayer(marker);
+                marker = L.marker(e.latlng).addTo(map);
+                document.getElementById('Input_Latitude').value = e.latlng.lat.toFixed(6);
+                document.getElementById('Input_Longitude').value = e.latlng.lng.toFixed(6);
+                document.getElementById('coords-display').style.display = 'flex';
+                document.getElementById('coords-text').textContent =
+                    e.latlng.lat.toFixed(4) + '°N, ' + e.latlng.lng.toFixed(4) + '°E';
+            });
+        </script>
+    }
+}
+

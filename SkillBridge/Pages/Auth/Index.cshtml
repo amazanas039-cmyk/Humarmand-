@@ -1,0 +1,34 @@
+@page
+@model SkillBridge.Pages.Auth.IndexModel
+@{
+    ViewData["Title"] = "Choose Your Role";
+    Layout = "_AuthLayout";
+}
+
+
+
+<div class="role-chooser">
+    <a href="/Auth/CustomerLogin" class="role-card">
+        <div class="role-card__icon">
+            <i class="fa-solid fa-users"></i>
+        </div>
+        <h2 class="role-card__title">Customer</h2>
+        <p class="role-card__desc">Find, hire, and rate verified local experts for your home or project needs in Pakistan.</p>
+    </a>
+
+    <a href="/Auth/LabourerLogin" class="role-card">
+        <div class="role-card__icon">
+            <i class="fa-solid fa-screwdriver-wrench"></i>
+        </div>
+        <h2 class="role-card__title">Labourer</h2>
+        <p class="role-card__desc">Register your skills, set your rates, update your availability, and find on-demand work in your area.</p>
+    </a>
+
+    <a href="/Auth/AdminLogin" class="role-card">
+        <div class="role-card__icon">
+            <i class="fa-solid fa-user-shield"></i>
+        </div>
+        <h2 class="role-card__title">Administrator</h2>
+        <p class="role-card__desc">Manage accounts, approve verification applications, and resolve disputes on the platform.</p>
+    </a>
+</div>
