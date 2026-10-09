@@ -21,10 +21,12 @@ namespace Hunarmand.Services
             _logger = logger;
         }
 
-        public IEnumerable<Labourer> RankAndSort(IEnumerable<Labourer> labourers, double? customerLat, double? customerLng)
-        {
-            var list = labourers.ToList();
-            double maxDistance = list.Max(l => l.DistanceKm ?? 0) + 0.01; // avoid div-by-zero
+       public IEnumerable<Labourer> RankAndSort(IEnumerable<Labourer> labourers, double? customerLat, double? customerLng)
+       {
+         var list = labourers.ToList();
+         if (!list.Any()) return list; // <-- Return immediately if no labourers found
+
+         double maxDistance = list.Max(l => l.DistanceKm ?? 0) + 0.01; // avoid div-by-zero
 
             foreach (var l in list)
             {
