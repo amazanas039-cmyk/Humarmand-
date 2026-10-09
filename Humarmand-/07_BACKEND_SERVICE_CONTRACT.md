@@ -1,5 +1,5 @@
 # 07 — Backend Service & API Contract
-**Project:** SkillBridge v2
+**Project:** Hunarmand v2
 **Purpose:** Complete contract for all services, stored procedures, and AJAX endpoints.
 Cursor uses this as the single source of truth when wiring repositories → services → page models.
 

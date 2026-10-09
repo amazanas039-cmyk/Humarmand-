@@ -1,5 +1,5 @@
 # 06 — Implementation Plan
-**Project:** SkillBridge v2 — On-Demand Labour Hiring Platform
+**Project:** Hunarmand v2 — On-Demand Labour Hiring Platform
 **For:** Cursor AI — full project build from scratch
 **Stack:** ASP.NET Core 8 Razor Pages · SQL Server · SignalR · Leaflet.js · Chart.js
 
@@ -12,10 +12,10 @@
 
 ### 0.1 Create the .NET solution
 ```bash
-dotnet new sln -n SkillBridge
-dotnet new webapp -n SkillBridge --no-https false
-dotnet sln add SkillBridge/SkillBridge.csproj
-cd SkillBridge
+dotnet new sln -n Hunarmand
+dotnet new webapp -n Hunarmand --no-https false
+dotnet sln add Hunarmand/Hunarmand.csproj
+cd Hunarmand
 ```
 
 ### 0.2 Add NuGet packages
@@ -30,11 +30,11 @@ dotnet add package Microsoft.AspNetCore.SignalR
 ```json
 {
   "ConnectionStrings": {
-    "SkillBridgeDB": "Server=(localdb)\\MSSQLLocalDB;Database=SkillBridgeDB;Trusted_Connection=True;TrustServerCertificate=True;"
+    "HunarmandDB": "Server=(localdb)\\MSSQLLocalDB;Database=HunarmandDB;Trusted_Connection=True;TrustServerCertificate=True;"
   },
   "Geocoding": {
     "NominatimBaseUrl": "https://nominatim.openstreetmap.org",
-    "UserAgent": "SkillBridge/1.0 (student-project)"
+    "UserAgent": "Hunarmand/1.0 (student-project)"
   },
   "Session": { "IdleTimeoutMinutes": 120 }
 }
@@ -104,7 +104,7 @@ app.Run();
 
 ### 0.5 Folder structure — create these empty directories now
 ```
-SkillBridge/
+Hunarmand/
 ├─ Data/
 ├─ Models/
 ├─ Repositories/
@@ -151,7 +151,7 @@ sqlcmd -S "(localdb)\MSSQLLocalDB" -i Database/schema.sql
 
 **Verify:**
 ```sql
-USE SkillBridgeDB;
+USE HunarmandDB;
 SELECT name FROM sys.tables ORDER BY name;     -- should list ~10 tables
 SELECT name FROM sys.procedures ORDER BY name; -- should list ~25+ SPs
 SELECT * FROM Users;                            -- should show 1 admin seed
@@ -161,10 +161,10 @@ SELECT * FROM Users;                            -- should show 1 admin seed
 ```sql
 -- Admin user (BCrypt hash of 'Admin@123' — pre-computed; accept SHA256 for seed only)
 INSERT INTO Users (FullName,Email,PasswordHash,Role)
-VALUES ('Platform Admin','admin@skillbridge.pk',
+VALUES ('Platform Admin','admin@Hunarmand.pk',
         '$2a$11$xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', -- BCrypt of Admin@123
         'Admin');
-INSERT INTO Admins (UserID) SELECT UserID FROM Users WHERE Email='admin@skillbridge.pk';
+INSERT INTO Admins (UserID) SELECT UserID FROM Users WHERE Email='admin@Hunarmand.pk';
 
 -- Skill categories
 INSERT INTO SkillCategories (Name,Description) VALUES
@@ -302,7 +302,7 @@ public class DatabaseConnection
 {
     private readonly string _connectionString;
     public DatabaseConnection(IConfiguration config)
-        => _connectionString = config.GetConnectionString("SkillBridgeDB")!;
+        => _connectionString = config.GetConnectionString("HunarmandDB")!;
 
     public SqlConnection GetConnection() => new SqlConnection(_connectionString);
 }
@@ -680,7 +680,7 @@ Sections (in order):
 1. **Hero** — headline with gradient word, subtext, CTA buttons (Get Started / Watch Demo), social proof avatars + count, floating dashboard mockup (a styled `<div>` mimicking the Aurora dashboard — not an image)
 2. **How it Works** — 3 steps: Post Job → Get Matched → Work Done. Icon + title + description per step.
 3. **Categories** — 8 category cards in a grid (icon + name + "X+ labourers")
-4. **Why SkillBridge** — 4 feature cards (Verified Labourers, Smart Matching, Real-Time Tracking, Dispute Protection)
+4. **Why Hunarmand** — 4 feature cards (Verified Labourers, Smart Matching, Real-Time Tracking, Dispute Protection)
 5. **Stats** — 3 animated counters (2,000+ Users, 500+ Verified Labourers, 4,800+ Jobs Completed)
 6. **Testimonials** — 3 cards (customer reviews; use placeholder names)
 7. **CTA Banner** — full-width violet gradient, "Ready to get started?" button

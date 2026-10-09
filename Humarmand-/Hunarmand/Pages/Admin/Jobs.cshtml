@@ -1,0 +1,72 @@
+@page
+@model Hunarmand.Pages.Admin.JobsModel
+@{
+    ViewData["Title"] = "Jobs";
+    Layout = "~/Pages/Shared/_AdminLayout.cshtml";
+}
+
+<div class="admin-page-header">
+    <h1><i class="fa-solid fa-briefcase" style="color:var(--clr-primary-light);margin-right:10px;font-size:22px;"></i>Job Requests</h1>
+    <div class="admin-page-header__meta">
+        <i class="fa-solid fa-circle" style="font-size:7px;color:var(--clr-success);"></i>
+        <span>@Model.Jobs.Count total job requests</span>
+    </div>
+</div>
+
+<!-- Filter tabs -->
+<div class="admin-tabs">
+    <a href="?status=" class="admin-tab @(string.IsNullOrEmpty(Model.StatusFilter) ? "active" : "")">All (@Model.Jobs.Count)</a>
+    <a href="?status=Pending" class="admin-tab @(Model.StatusFilter == "Pending" ? "active" : "")">Pending (@Model.Jobs.Count(j => j.Status == "Pending"))</a>
+    <a href="?status=Accepted" class="admin-tab @(Model.StatusFilter == "Accepted" ? "active" : "")">Accepted (@Model.Jobs.Count(j => j.Status == "Accepted"))</a>
+    <a href="?status=Completed" class="admin-tab @(Model.StatusFilter == "Completed" ? "active" : "")">Completed (@Model.Jobs.Count(j => j.Status == "Completed"))</a>
+    <a href="?status=Rejected" class="admin-tab @(Model.StatusFilter == "Rejected" ? "active" : "")">Rejected (@Model.Jobs.Count(j => j.Status == "Rejected"))</a>
+</div>
+
+<div class="admin-panel">
+    <div class="admin-panel__body">
+        @if (!Model.FilteredJobs.Any())
+        {
+            <div class="admin-empty">
+                <i class="fa-solid fa-briefcase"></i>
+                <p>No job requests found.</p>
+            </div>
+        }
+        else
+        {
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Description</th>
+                        <th>Location</th>
+                        <th>Date</th>
+                        <th>Est. Hours</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var j in Model.FilteredJobs)
+                    {
+                        <tr>
+                            <td style="color:var(--clr-text-muted);font-size:12px;">#@j.RequestID</td>
+                            <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">@j.JobDescription</td>
+                            <td style="color:var(--clr-text-muted);font-size:13px;"><i class="fa-solid fa-location-dot" style="color:var(--clr-primary-light);"></i> @j.Location</td>
+                            <td style="color:var(--clr-text-muted);font-size:13px;">@j.PreferredDate.ToString("MMM dd, yyyy")</td>
+                            <td style="color:var(--clr-text-muted);font-size:13px;">@j.EstimatedHours hr@(j.EstimatedHours != 1 ? "s" : "")</td>
+                            <td>
+                                @if (j.Status == "Accepted" || j.Status == "Completed")
+                                { <span class="badge badge--success">@j.Status</span> }
+                                else if (j.Status == "Pending")
+                                { <span class="badge badge--warning">@j.Status</span> }
+                                else if (j.Status == "Rejected" || j.Status == "Cancelled")
+                                { <span class="badge badge--danger">@j.Status</span> }
+                                else
+                                { <span class="badge badge--muted">@j.Status</span> }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+</div>

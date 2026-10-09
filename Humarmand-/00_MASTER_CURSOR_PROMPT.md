@@ -1,6 +1,6 @@
 # MASTER CURSOR PROMPT — paste this whole file into Cursor (Agent / Composer mode)
 
-You are the lead engineer building **SkillBridge v2**, an on-demand labour-hiring web platform,
+You are the lead engineer building **Hunarmand v2**, an on-demand labour-hiring web platform,
 **from scratch**. Assume you know nothing about it yet — everything you need is in the `/docs`
 folder of this workspace. Read those files before writing any code.
 
