@@ -1,0 +1,135 @@
+@page
+@model SkillBridge.Pages.Customer.DashboardModel
+@{
+    ViewData["Title"] = "Customer Dashboard";
+    Layout = "_CustomerLayout";
+}
+
+<div class="dashboard-header animate-fade-up">
+    <div>
+        <h1>Welcome back, @Model.CustomerName 👋</h1>
+        <p class="text-muted">Here is what's happening with your jobs today.</p>
+    </div>
+    <div class="dashboard-actions">
+        <a href="/Customer/Browse" class="btn btn-primary">
+            <i class="fa-solid fa-plus"></i> Hire Professional
+        </a>
+    </div>
+</div>
+
+<div class="stats-grid mt-6 animate-fade-up" style="animation-delay: 0.1s;">
+    <div class="glass-card stat-card">
+        <div class="stat-card__icon" style="background: rgba(124, 58, 237, 0.1); color: var(--clr-primary);">
+            <i class="fa-solid fa-briefcase"></i>
+        </div>
+        <div class="stat-card__info">
+            <p class="text-sm text-muted">Active Jobs</p>
+            <h3>@Model.ActiveJobsCount</h3>
+        </div>
+    </div>
+    <div class="glass-card stat-card">
+        <div class="stat-card__icon" style="background: rgba(16, 185, 129, 0.1); color: var(--clr-success);">
+            <i class="fa-solid fa-check-circle"></i>
+        </div>
+        <div class="stat-card__info">
+            <p class="text-sm text-muted">Completed Jobs</p>
+            <h3>@Model.CompletedJobsCount</h3>
+        </div>
+    </div>
+    <div class="glass-card stat-card">
+        <div class="stat-card__icon" style="background: rgba(245, 158, 11, 0.1); color: var(--clr-warning);">
+            <i class="fa-solid fa-star"></i>
+        </div>
+        <div class="stat-card__info">
+            <p class="text-sm text-muted">Pending Reviews</p>
+            <h3>@Model.PendingReviewCount</h3>
+        </div>
+    </div>
+</div>
+
+<div class="dashboard-grid mt-8 animate-fade-up" style="animation-delay: 0.2s; display: grid; grid-template-columns: 2fr 1fr; gap: 2rem;">
+    <!-- Recent Requests -->
+    <div class="glass-card">
+        <div class="card-header d-flex justify-between align-center mb-4">
+            <h3 class="mb-0">Recent Requests</h3>
+            <a href="/Customer/Requests" class="text-primary text-sm">View All</a>
+        </div>
+        
+        @if (!Model.RecentJobs.Any())
+        {
+            <div class="empty-state text-center p-8">
+                <div class="empty-icon text-4xl text-muted mb-4">
+                    <i class="fa-regular fa-folder-open"></i>
+                </div>
+                <h4>No Requests Yet</h4>
+                <p class="text-muted text-sm mb-4">You haven't requested any professionals yet.</p>
+                <a href="/Customer/Browse" class="btn btn-outline btn-sm">Find a Professional</a>
+            </div>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="admin-table w-100">
+                    <thead>
+                        <tr>
+                            <th>Job ID</th>
+                            <th>Professional</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var job in Model.RecentJobs)
+                        {
+                            <tr>
+                                <td>#@job.RequestID</td>
+                                <td>@job.LabourerName</td>
+                                <td>@job.PreferredDate.ToString("MMM dd, yyyy")</td>
+                                <td>
+                                    @{
+                                        var badgeClass = job.Status switch
+                                        {
+                                            "Pending" => "badge--warning",
+                                            "Accepted" => "badge--info",
+                                            "InProgress" => "badge--primary",
+                                            "Completed" => "badge--success",
+                                            "Rejected" => "badge--danger",
+                                            "Cancelled" => "badge--danger",
+                                            _ => "badge--secondary"
+                                        };
+                                    }
+                                    <span class="badge @badgeClass">@job.Status</span>
+                                </td>
+                                <td>
+                                    <a href="/Customer/RequestDetail/@job.RequestID" class="btn btn-sm btn-ghost">View</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+
+    <!-- Quick Hire Categories -->
+    <div class="glass-card">
+        <h3 class="mb-4">Quick Browse</h3>
+        <div class="category-list d-flex flex-column gap-3">
+            @foreach (var cat in Model.Categories.Take(5))
+            {
+                <a href="/Customer/Browse?category=@cat.CategoryID" class="category-item d-flex align-center p-3 rounded" style="background: rgba(var(--clr-surface-rgb), 0.5); text-decoration: none; color: inherit; transition: all 0.2s ease;">
+                    <div class="icon-circle mr-3" style="width: 40px; height: 40px; border-radius: 50%; background: rgba(124, 58, 237, 0.1); color: var(--clr-primary); display: flex; align-items: center; justify-content: center;">
+                        <i class="fa-solid fa-toolbox"></i>
+                    </div>
+                    <div>
+                        <h4 class="mb-0 text-md">@cat.Name</h4>
+                        <span class="text-xs text-muted">Find professionals</span>
+                    </div>
+                    <i class="fa-solid fa-chevron-right ml-auto text-muted text-sm"></i>
+                </a>
+            }
+            <a href="/Customer/Browse" class="btn btn-outline w-100 mt-2">See All Categories</a>
+        </div>
+    </div>
+</div>

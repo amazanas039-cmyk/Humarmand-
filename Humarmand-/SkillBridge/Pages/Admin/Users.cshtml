@@ -1,0 +1,112 @@
+@page
+@model SkillBridge.Pages.Admin.UsersModel
+@{
+    ViewData["Title"] = "Users";
+    Layout = "~/Pages/Shared/_AdminLayout.cshtml";
+}
+
+<div class="admin-page-header">
+    <h1><i class="fa-solid fa-users" style="color:var(--clr-primary-light);margin-right:10px;font-size:22px;"></i>User Management</h1>
+    <div class="admin-page-header__meta">
+        <i class="fa-solid fa-circle" style="font-size:7px;color:var(--clr-success);"></i>
+        <span>@Model.Users.Count total users in the system</span>
+    </div>
+</div>
+
+@if (!string.IsNullOrEmpty(Model.Message))
+{
+    <div class="admin-alert admin-alert--@Model.MessageType" id="adminAlert">
+        <i class="fa-solid fa-@(Model.MessageType == "success" ? "check-circle" : "triangle-exclamation")"></i>
+        @Model.Message
+    </div>
+}
+
+<!-- Search & Filter Bar -->
+<div class="admin-toolbar">
+    <form method="get" class="admin-search-form">
+        <div class="admin-search-box">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" name="search" value="@Model.Search" placeholder="Search by name or email..." class="admin-search-input" id="userSearch" />
+        </div>
+        <button type="submit" class="admin-btn admin-btn--primary"><i class="fa-solid fa-search"></i> Search</button>
+        @if (!string.IsNullOrEmpty(Model.Search))
+        {
+            <a href="/Admin/Users" class="admin-btn admin-btn--ghost"><i class="fa-solid fa-xmark"></i> Clear</a>
+        }
+    </form>
+    <div class="admin-toolbar__stats">
+        <span class="badge badge--success">@Model.Users.Count(u => !u.IsSuspended && u.IsActive) Active</span>
+        <span class="badge badge--danger">@Model.Users.Count(u => u.IsSuspended) Suspended</span>
+    </div>
+</div>
+
+<div class="admin-panel">
+    <div class="admin-panel__header">
+        <div class="admin-panel__title"><i class="fa-solid fa-table-list"></i> All Users</div>
+    </div>
+    <div class="admin-panel__body">
+        @if (!Model.Users.Any())
+        {
+            <div class="admin-empty">
+                <i class="fa-solid fa-users-slash"></i>
+                <p>No users found@(!string.IsNullOrEmpty(Model.Search) ? " matching '" + Model.Search + "'" : "").</p>
+            </div>
+        }
+        else
+        {
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>User</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Phone</th>
+                        <th>Joined</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var user in Model.Users)
+                    {
+                        <tr>
+                            <td>
+                                <span class="admin-table__avatar" style="background:@(user.Role == "Labourer" ? "linear-gradient(135deg,#10B981,#059669)" : user.Role == "Admin" ? "linear-gradient(135deg,#EF4444,#DC2626)" : "linear-gradient(135deg,#7C3AED,#5B21B6)")">@(user.FullName?.Length > 0 ? user.FullName[0] : '?')</span>
+                                <span class="admin-table__name">@user.FullName</span>
+                            </td>
+                            <td style="color:var(--clr-text-muted);font-size:13px;">@user.Email</td>
+                            <td>
+                                @if (user.Role == "Admin")
+                                { <span class="badge badge--danger">@user.Role</span> }
+                                else if (user.Role == "Labourer")
+                                { <span class="badge badge--success">@user.Role</span> }
+                                else
+                                { <span class="badge badge--info">@user.Role</span> }
+                            </td>
+                            <td style="color:var(--clr-text-muted);font-size:13px;">@(user.Phone ?? "—")</td>
+                            <td style="color:var(--clr-text-muted);font-size:13px;">@user.CreatedAt.ToString("MMM dd, yyyy")</td>
+                            <td>
+                                @if (user.IsSuspended)
+                                { <span class="badge badge--danger"><i class="fa-solid fa-ban"></i> Suspended</span> }
+                                else if (!user.IsActive)
+                                { <span class="badge badge--muted">Inactive</span> }
+                                else
+                                { <span class="badge badge--success"><i class="fa-solid fa-check"></i> Active</span> }
+                            </td>
+                            <td>
+                                <form method="post" asp-page-handler="ToggleSuspend" style="display:inline;">
+                                    <input type="hidden" name="userId" value="@user.UserID" />
+                                    <input type="hidden" name="suspend" value="@(!user.IsSuspended)" />
+                                    <button type="submit" class="admin-btn admin-btn--sm @(user.IsSuspended ? "admin-btn--success" : "admin-btn--danger")" title="@(user.IsSuspended ? "Unsuspend" : "Suspend")">
+                                        <i class="fa-solid fa-@(user.IsSuspended ? "lock-open" : "ban")"></i>
+                                        @(user.IsSuspended ? "Unsuspend" : "Suspend")
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+</div>

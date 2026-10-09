@@ -1,0 +1,77 @@
+@page
+@model SkillBridge.Pages.Admin.LabourersModel
+@{
+    ViewData["Title"] = "Labourers";
+    Layout = "~/Pages/Shared/_AdminLayout.cshtml";
+}
+
+<div class="admin-page-header">
+    <h1><i class="fa-solid fa-helmet-safety" style="color:var(--clr-primary-light);margin-right:10px;font-size:22px;"></i>Labourer Management</h1>
+    <div class="admin-page-header__meta">
+        <i class="fa-solid fa-circle" style="font-size:7px;color:var(--clr-success);"></i>
+        <span>@Model.Labourers.Count registered labourers</span>
+    </div>
+</div>
+
+<div class="admin-panel">
+    <div class="admin-panel__header">
+        <div class="admin-panel__title"><i class="fa-solid fa-helmet-safety"></i> All Labourers</div>
+        <a href="/Admin/Verifications" class="admin-panel__action">Pending Verifications</a>
+    </div>
+    <div class="admin-panel__body">
+        @if (!Model.Labourers.Any())
+        {
+            <div class="admin-empty">
+                <i class="fa-solid fa-helmet-safety"></i>
+                <p>No labourers registered yet.</p>
+            </div>
+        }
+        else
+        {
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Category</th>
+                        <th>Experience</th>
+                        <th>Rate/hr</th>
+                        <th>Rating</th>
+                        <th>Verification</th>
+                        <th>Profile Live</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var l in Model.Labourers)
+                    {
+                        <tr>
+                            <td>
+                                <span class="admin-table__avatar" style="background:linear-gradient(135deg,#10B981,#059669)">@(l.FullName?[0])</span>
+                                <span class="admin-table__name">@l.FullName</span>
+                            </td>
+                            <td>@l.CategoryName</td>
+                            <td>@l.ExperienceYears yr@(l.ExperienceYears != 1 ? "s" : "")</td>
+                            <td>Rs @l.HourlyRate/hr</td>
+                            <td>
+                                <span style="color:var(--clr-warning);"><i class="fa-solid fa-star"></i> @l.ReputationScore.ToString("F1")</span>
+                            </td>
+                            <td>
+                                @if (l.VerificationStatus == "Approved")
+                                { <span class="badge badge--success"><i class="fa-solid fa-check"></i> Approved</span> }
+                                else if (l.VerificationStatus == "Pending")
+                                { <span class="badge badge--warning"><i class="fa-solid fa-clock"></i> Pending</span> }
+                                else
+                                { <span class="badge badge--danger"><i class="fa-solid fa-xmark"></i> Rejected</span> }
+                            </td>
+                            <td>
+                                @if (l.IsProfileLive)
+                                { <span class="badge badge--success">Live</span> }
+                                else
+                                { <span class="badge badge--muted">Hidden</span> }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+</div>

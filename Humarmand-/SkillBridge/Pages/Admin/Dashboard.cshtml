@@ -1,0 +1,249 @@
+@page
+@model SkillBridge.Pages.Admin.DashboardModel
+@{
+    ViewData["Title"] = "Dashboard";
+    Layout = "~/Pages/Shared/_AdminLayout.cshtml";
+}
+
+<!-- Page Header -->
+<div class="admin-page-header">
+    <h1><i class="fa-solid fa-gauge-high" style="color:var(--clr-primary-light);margin-right:10px;font-size:22px;"></i>Admin Dashboard</h1>
+    <div class="admin-page-header__meta">
+        <i class="fa-solid fa-circle" style="font-size:7px;"></i>
+        <span>System is live &amp; operational</span>
+        <span style="margin-left:8px;color:var(--clr-text-muted);">Last updated: @DateTime.Now.ToString("MMM dd, yyyy — hh:mm tt")</span>
+    </div>
+</div>
+
+<!-- KPI Stat Cards -->
+<div class="admin-stats-grid">
+    <div class="admin-stat-card" style="--stat-accent:#7C3AED;--stat-icon-bg:rgba(124,58,237,0.15);">
+        <div class="admin-stat-card__icon"><i class="fa-solid fa-users"></i></div>
+        <div class="admin-stat-card__body">
+            <div class="admin-stat-card__value">@Model.TotalUsers</div>
+            <div class="admin-stat-card__label">Total Users</div>
+            <div class="admin-stat-card__trend admin-stat-card__trend--up">
+                <i class="fa-solid fa-arrow-trend-up"></i> +12% this month
+            </div>
+        </div>
+    </div>
+
+    <div class="admin-stat-card" style="--stat-accent:#10B981;--stat-icon-bg:rgba(16,185,129,0.15);">
+        <div class="admin-stat-card__icon"><i class="fa-solid fa-briefcase"></i></div>
+        <div class="admin-stat-card__body">
+            <div class="admin-stat-card__value">@Model.ActiveJobs</div>
+            <div class="admin-stat-card__label">Active Jobs</div>
+            <div class="admin-stat-card__trend admin-stat-card__trend--up">
+                <i class="fa-solid fa-arrow-trend-up"></i> +5 today
+            </div>
+        </div>
+    </div>
+
+    <div class="admin-stat-card" style="--stat-accent:#EF4444;--stat-icon-bg:rgba(239,68,68,0.15);">
+        <div class="admin-stat-card__icon"><i class="fa-solid fa-scale-balanced"></i></div>
+        <div class="admin-stat-card__body">
+            <div class="admin-stat-card__value">@Model.PendingDisputes</div>
+            <div class="admin-stat-card__label">Pending Disputes</div>
+            <div class="admin-stat-card__trend admin-stat-card__trend--down">
+                <i class="fa-solid fa-triangle-exclamation"></i> Needs attention
+            </div>
+        </div>
+    </div>
+
+    <div class="admin-stat-card" style="--stat-accent:#F59E0B;--stat-icon-bg:rgba(245,158,11,0.15);">
+        <div class="admin-stat-card__icon"><i class="fa-solid fa-user-check"></i></div>
+        <div class="admin-stat-card__body">
+            <div class="admin-stat-card__value">@Model.PendingVerifications</div>
+            <div class="admin-stat-card__label">Pending Verifications</div>
+            <div class="admin-stat-card__trend admin-stat-card__trend--up">
+                <i class="fa-solid fa-clock"></i> Awaiting review
+            </div>
+        </div>
+    </div>
+
+    <div class="admin-stat-card" style="--stat-accent:#3B82F6;--stat-icon-bg:rgba(59,130,246,0.15);">
+        <div class="admin-stat-card__icon"><i class="fa-solid fa-helmet-safety"></i></div>
+        <div class="admin-stat-card__body">
+            <div class="admin-stat-card__value">@Model.TotalLabourers</div>
+            <div class="admin-stat-card__label">Registered Labourers</div>
+            <div class="admin-stat-card__trend admin-stat-card__trend--up">
+                <i class="fa-solid fa-arrow-trend-up"></i> +8 this week
+            </div>
+        </div>
+    </div>
+
+    <div class="admin-stat-card" style="--stat-accent:#A855F7;--stat-icon-bg:rgba(168,85,247,0.15);">
+        <div class="admin-stat-card__icon"><i class="fa-solid fa-star"></i></div>
+        <div class="admin-stat-card__body">
+            <div class="admin-stat-card__value">@Model.AverageRating.ToString("F1")</div>
+            <div class="admin-stat-card__label">Avg. Labourer Rating</div>
+            <div class="admin-stat-card__trend admin-stat-card__trend--up">
+                <i class="fa-solid fa-arrow-trend-up"></i> Out of 5.0
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Middle Content Grid -->
+<div class="admin-content-grid">
+
+    <!-- Recent Jobs Table -->
+    <div class="admin-panel">
+        <div class="admin-panel__header">
+            <div class="admin-panel__title"><i class="fa-solid fa-briefcase"></i> Recent Job Requests</div>
+            <a href="/Admin/Jobs" class="admin-panel__action">View All</a>
+        </div>
+        <div class="admin-panel__body">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>Customer</th>
+                        <th>Category</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var job in Model.RecentJobs)
+                    {
+                        <tr>
+                            <td>
+                                <span class="admin-table__avatar">@job.CustomerInitial</span>
+                                <span class="admin-table__name">@job.CustomerName</span>
+                            </td>
+                            <td>@job.Category</td>
+                            <td>@job.Date.ToString("MMM dd")</td>
+                            <td>
+                                @if (job.Status == "Accepted")
+                                {
+                                    <span class="badge badge--success"><i class="fa-solid fa-check"></i> @job.Status</span>
+                                }
+                                else if (job.Status == "Pending")
+                                {
+                                    <span class="badge badge--warning"><i class="fa-solid fa-clock"></i> @job.Status</span>
+                                }
+                                else if (job.Status == "Rejected")
+                                {
+                                    <span class="badge badge--danger"><i class="fa-solid fa-xmark"></i> @job.Status</span>
+                                }
+                                else
+                                {
+                                    <span class="badge badge--muted">@job.Status</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Right Column -->
+    <div style="display:flex;flex-direction:column;gap:24px;">
+
+        <!-- Quick Actions -->
+        <div class="admin-panel">
+            <div class="admin-panel__header">
+                <div class="admin-panel__title"><i class="fa-solid fa-bolt"></i> Quick Actions</div>
+            </div>
+            <div class="admin-quick-actions">
+                <a href="/Admin/Verifications" class="admin-quick-btn">
+                    <i class="fa-solid fa-user-check"></i>
+                    <span>Review Verifications</span>
+                </a>
+                <a href="/Admin/Disputes" class="admin-quick-btn">
+                    <i class="fa-solid fa-scale-balanced"></i>
+                    <span>Resolve Disputes</span>
+                </a>
+                <a href="/Admin/Categories" class="admin-quick-btn">
+                    <i class="fa-solid fa-tags"></i>
+                    <span>Manage Categories</span>
+                </a>
+                <a href="/Admin/Users" class="admin-quick-btn">
+                    <i class="fa-solid fa-users-gear"></i>
+                    <span>Manage Users</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Activity Feed -->
+        <div class="admin-panel" style="flex:1;">
+            <div class="admin-panel__header">
+                <div class="admin-panel__title"><i class="fa-solid fa-rss"></i> Live Activity</div>
+            </div>
+            <div class="admin-activity">
+                @foreach (var act in Model.RecentActivity)
+                {
+                    <div class="admin-activity__item">
+                        <div class="admin-activity__dot admin-activity__dot--@act.DotClass">
+                            <i class="fa-solid fa-@act.Icon"></i>
+                        </div>
+                        <div class="admin-activity__text">
+                            <strong>@act.Actor</strong> @act.Action
+                            <span class="admin-activity__time">@act.TimeAgo</span>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bottom Row -->
+<div class="admin-bottom-grid">
+
+    <!-- Jobs by Category chart -->
+    <div class="admin-panel">
+        <div class="admin-panel__header">
+            <div class="admin-panel__title"><i class="fa-solid fa-chart-bar"></i> Jobs by Category</div>
+        </div>
+        <div class="admin-bar-chart">
+            @foreach (var cat in Model.CategoryStats)
+            {
+                <div class="admin-bar-row">
+                    <div class="admin-bar-row__label">@cat.Name</div>
+                    <div class="admin-bar-row__track">
+                        <div class="admin-bar-row__fill" style="width:@cat.Percent%;"></div>
+                    </div>
+                    <div class="admin-bar-row__value">@cat.Count</div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- Pending Verifications mini table -->
+    <div class="admin-panel">
+        <div class="admin-panel__header">
+            <div class="admin-panel__title"><i class="fa-solid fa-user-clock"></i> Awaiting Verification</div>
+            <a href="/Admin/Verifications" class="admin-panel__action">Review All</a>
+        </div>
+        <div class="admin-panel__body">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>Labourer</th>
+                        <th>Skill</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var v in Model.PendingVerificationList)
+                    {
+                        <tr>
+                            <td>
+                                <span class="admin-table__avatar" style="background:var(--grad-card);color:var(--clr-primary-light);border:1px solid rgba(124,58,237,0.3);">@v.Initial</span>
+                                <span class="admin-table__name">@v.Name</span>
+                            </td>
+                            <td>@v.Skill</td>
+                            <td>
+                                <a href="/Admin/Verifications?id=@v.Id" class="badge badge--info" style="text-decoration:none;cursor:pointer;">
+                                    <i class="fa-solid fa-eye"></i> Review
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
