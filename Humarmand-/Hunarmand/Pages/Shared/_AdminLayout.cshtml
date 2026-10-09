@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] — Hunarmand Admin</title>
+    <meta name="description" content="Hunarmand Admin Panel — manage users, jobs, disputes and analytics." />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+    <!-- Design system -->
+    <link rel="stylesheet" href="~/css/design-system.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/admin.css" asp-append-version="true" />
+    
+    <!-- Theme loading script (blocking in head to avoid flicker) -->
+    <script src="~/js/theme.js" asp-append-version="true"></script>
+</head>
+<body class="admin-body">
+
+    <!-- SIDEBAR -->
+    <aside class="admin-sidebar" id="adminSidebar">
+        <div class="admin-sidebar__header">
+            <a href="/" class="admin-sidebar__logo">
+                <span class="admin-sidebar__logo-icon"><i class="fa-solid fa-hard-hat"></i></span>
+                <span class="admin-sidebar__logo-text">Hunarmand</span>
+            </a>
+            <button class="admin-sidebar__close" id="sidebarClose" aria-label="Close sidebar">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <div class="admin-sidebar__role-badge">
+            <i class="fa-solid fa-shield-halved"></i>
+            <span>Administrator</span>
+        </div>
+
+        <nav class="admin-nav">
+            <span class="admin-nav__section-label">Overview</span>
+            <a href="/Admin/Dashboard" class="admin-nav__link @(ViewContext.RouteData.Values["page"]?.ToString() == "/Admin/Dashboard" ? "active" : "")">
+                <i class="fa-solid fa-gauge-high"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="/Admin/Analytics" class="admin-nav__link @(ViewContext.RouteData.Values["page"]?.ToString() == "/Admin/Analytics" ? "active" : "")">
+                <i class="fa-solid fa-chart-line"></i>
+                <span>Analytics</span>
+            </a>
+
+            <span class="admin-nav__section-label">Management</span>
+            <a href="/Admin/Users" class="admin-nav__link @(ViewContext.RouteData.Values["page"]?.ToString() == "/Admin/Users" ? "active" : "")">
+                <i class="fa-solid fa-users"></i>
+                <span>Users</span>
+                <span class="admin-nav__badge">42</span>
+            </a>
+            <a href="/Admin/Labourers" class="admin-nav__link @(ViewContext.RouteData.Values["page"]?.ToString() == "/Admin/Labourers" ? "active" : "")">
+                <i class="fa-solid fa-helmet-safety"></i>
+                <span>Labourers</span>
+            </a>
+            <a href="/Admin/Jobs" class="admin-nav__link @(ViewContext.RouteData.Values["page"]?.ToString() == "/Admin/Jobs" ? "active" : "")">
+                <i class="fa-solid fa-briefcase"></i>
+                <span>Jobs</span>
+            </a>
+            <a href="/Admin/Categories" class="admin-nav__link @(ViewContext.RouteData.Values["page"]?.ToString() == "/Admin/Categories" ? "active" : "")">
+                <i class="fa-solid fa-tags"></i>
+                <span>Categories</span>
+            </a>
+
+            <span class="admin-nav__section-label">Moderation</span>
+            <a href="/Admin/Disputes" class="admin-nav__link @(ViewContext.RouteData.Values["page"]?.ToString() == "/Admin/Disputes" ? "active" : "")">
+                <i class="fa-solid fa-scale-balanced"></i>
+                <span>Disputes</span>
+                <span class="admin-nav__badge admin-nav__badge--danger">3</span>
+            </a>
+            <a href="/Admin/Verifications" class="admin-nav__link @(ViewContext.RouteData.Values["page"]?.ToString() == "/Admin/Verifications" ? "active" : "")">
+                <i class="fa-solid fa-user-check"></i>
+                <span>Verifications</span>
+                <span class="admin-nav__badge admin-nav__badge--warning">5</span>
+            </a>
+
+            <span class="admin-nav__section-label">System</span>
+            <a href="/" class="admin-nav__link">
+                <i class="fa-solid fa-arrow-left"></i>
+                <span>Back to Site</span>
+            </a>
+            <a href="/Auth/Logout" class="admin-nav__link admin-nav__link--danger">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <span>Sign Out</span>
+            </a>
+        </nav>
+    </aside>
+
+    <!-- OVERLAY for mobile -->
+    <div class="admin-overlay" id="adminOverlay"></div>
+
+    <!-- MAIN CONTENT -->
+    <div class="admin-main">
+
+        <!-- TOP BAR -->
+        <header class="admin-topbar">
+            <div class="admin-topbar__left">
+                <button class="admin-topbar__menu-btn" id="sidebarToggle" aria-label="Toggle sidebar">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+                <div class="admin-topbar__breadcrumb">
+                    <span>Admin</span>
+                    <i class="fa-solid fa-chevron-right"></i>
+                    <span class="admin-topbar__breadcrumb-page">@ViewData["Title"]</span>
+                </div>
+            </div>
+            <div class="admin-topbar__right">
+                <button class="theme-toggle" id="theme-toggle" aria-label="Toggle Light/Dark Theme" style="background: none; border: none; font-size: 1.2rem; cursor: pointer; color: var(--clr-text);">
+                    <i class="fa-solid fa-moon"></i>
+                </button>
+                <button class="admin-topbar__icon-btn" id="notifBtn" aria-label="Notifications">
+                    <i class="fa-solid fa-bell"></i>
+                    <span class="admin-topbar__notif-dot"></span>
+                </button>
+                <div class="admin-topbar__avatar" title="Admin">
+                    <i class="fa-solid fa-user-shield"></i>
+                </div>
+            </div>
+        </header>
+
+        <!-- PAGE BODY -->
+        <main class="admin-page-content">
+            @RenderBody()
+        </main>
+    </div>
+
+    @await RenderSectionAsync("Scripts", required: false)
+
+    <script>
+        // Sidebar toggle
+        const sidebar  = document.getElementById('adminSidebar');
+        const overlay  = document.getElementById('adminOverlay');
+        const toggle   = document.getElementById('sidebarToggle');
+        const closeBtn = document.getElementById('sidebarClose');
+
+        function openSidebar()  { sidebar.classList.add('open'); overlay.classList.add('visible'); }
+        function closeSidebar() { sidebar.classList.remove('open'); overlay.classList.remove('visible'); }
+
+        toggle?.addEventListener('click', openSidebar);
+        closeBtn?.addEventListener('click', closeSidebar);
+        overlay?.addEventListener('click', closeSidebar);
+    </script>
+</body>
+</html>

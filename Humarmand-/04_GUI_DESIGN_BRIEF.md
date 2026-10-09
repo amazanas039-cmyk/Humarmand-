@@ -1,5 +1,5 @@
 # 04 — GUI Design Brief
-**Project:** SkillBridge v2 (Hunarmand)
+**Project:** Hunarmand v2 (Hunarmand)
 **Design Theme:** Aurora Dark — Deep Violet × Electric Purple × Glass Morphism
 
 ---

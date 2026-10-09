@@ -1,5 +1,5 @@
 # 03 — Database Schema (SQL Server)
-**Database:** `SkillBridgeDB` · single canonical script · ADO.NET calls **these stored procedures only**.
+**Database:** `HunarmandDB` · single canonical script · ADO.NET calls **these stored procedures only**.
 
 > This file consolidates the messy multi-file SQL of the old project into ONE clean, ordered script.
 > Cursor: create `Database/schema.sql` from this. Run order is top-to-bottom (tables → indexes →
@@ -375,7 +375,7 @@ INSERT INTO SkillCategories(Name,Description) VALUES
 
 -- Admin (replace hash with a real BCrypt/SHA-256 of 'Admin@123')
 INSERT INTO Users(FullName,Email,PasswordHash,Role)
- VALUES ('Platform Admin','admin@skillbridge.pk','<HASH_OF_Admin@123>','Admin');
+ VALUES ('Platform Admin','admin@Hunarmand.pk','<HASH_OF_Admin@123>','Admin');
 ```
 Provide a few seed customers and **approved+live** labourers WITH latitude/longitude around Lahore
 (e.g. 31.5204, 74.3587 ± small offsets) so the map filter has data on first run.
@@ -383,7 +383,7 @@ Provide a few seed customers and **approved+live** labourers WITH latitude/longi
 ---
 
 ## 7. Setup steps (put in README)
-1. Create DB `SkillBridgeDB`.
+1. Create DB `HunarmandDB`.
 2. Run `Database/schema.sql` (this whole script).
 3. Confirm connection string in `appsettings.json`.
 4. `dotnet restore && dotnet run`.

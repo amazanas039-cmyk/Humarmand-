@@ -1,5 +1,5 @@
 # 02 — Technical Requirements Document (TRD)
-**Project:** SkillBridge v2
+**Project:** Hunarmand v2
 
 ---
 
@@ -49,7 +49,7 @@ Strict layering — **dependencies point downward only**:
 
 ### Folder structure
 ```
-SkillBridge/
+Hunarmand/
 ├─ Program.cs
 ├─ appsettings.json
 ├─ Data/                DatabaseConnection.cs
@@ -177,9 +177,9 @@ FKs; aggregate functions (AVG/COUNT/SUM/MAX); INNER/LEFT/multi-table JOINs.
 ```json
 {
   "ConnectionStrings": {
-    "SkillBridgeDB": "Server=(localdb)\\MSSQLLocalDB;Database=SkillBridgeDB;Trusted_Connection=True;TrustServerCertificate=True;"
+    "HunarmandDB": "Server=(localdb)\\MSSQLLocalDB;Database=HunarmandDB;Trusted_Connection=True;TrustServerCertificate=True;"
   },
-  "Geocoding": { "NominatimBaseUrl": "https://nominatim.openstreetmap.org", "UserAgent": "SkillBridge/1.0 (student-project)" }
+  "Geocoding": { "NominatimBaseUrl": "https://nominatim.openstreetmap.org", "UserAgent": "Hunarmand/1.0 (student-project)" }
 }
 ```
 `Program.cs` registers: Razor Pages, Session, HttpContextAccessor, `AddSignalR()`, `IHttpClientFactory`

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Hunarmand</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- CSS libraries -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    
+    <!-- Custom Design System CSS -->
+    <link rel="stylesheet" href="~/css/design-system.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/layout.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/auth.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/animations.css" asp-append-version="true" />
+    
+    <!-- Theme loading script (blocking in head to avoid flicker) -->
+    <script src="~/js/theme.js" asp-append-version="true"></script>
+</head>
+<body class="auth-body">
+    <!-- Persistent background orbs for all auth pages -->
+    <div class="auth-bg" aria-hidden="true">
+        <div class="auth-orb auth-orb--1"></div>
+        <div class="auth-orb auth-orb--2"></div>
+    </div>
+    <header class="auth-header">
+        <a class="auth-header__logo" href="/">
+            <i class="fa-solid fa-hard-hat"></i>
+            <span>Hunarmand</span>
+        </a>
+        <div class="auth-header__theme">
+            <button class="theme-toggle" id="theme-toggle" aria-label="Toggle Light/Dark Theme">
+                <i class="fa-solid fa-moon"></i>
+            </button>
+        </div>
+    </header>
+
+    <main role="main" class="auth-main">
+        @RenderBody()
+    </main>
+
+    <script>
+        // Init theme toggle for auth pages
+        document.addEventListener('DOMContentLoaded', () => {
+            const btn = document.getElementById('theme-toggle');
+            if (btn) {
+                btn.addEventListener('click', () => {
+                    toggleTheme();
+                    // update icon
+                    const icon = btn.querySelector('i');
+                    if (icon) {
+                        const currentTheme = document.documentElement.getAttribute('data-theme');
+                        if (currentTheme === 'dark') {
+                            icon.className = 'fa-solid fa-sun';
+                        } else {
+                            icon.className = 'fa-solid fa-moon';
+                        }
+                    }
+                });
+                
+                // set initial icon
+                const icon = btn.querySelector('i');
+                if (icon) {
+                    const currentTheme = document.documentElement.getAttribute('data-theme');
+                    if (currentTheme === 'dark') {
+                        icon.className = 'fa-solid fa-sun';
+                    } else {
+                        icon.className = 'fa-solid fa-moon';
+                    }
+                }
+            }
+        });
+    </script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

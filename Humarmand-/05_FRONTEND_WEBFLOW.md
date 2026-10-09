@@ -1,5 +1,5 @@
 # 05 — Frontend Webflow & Page Navigation Map
-**Project:** SkillBridge v2 (Hunarmand)
+**Project:** Hunarmand v2 (Hunarmand)
 **Framework:** ASP.NET Core 8 Razor Pages
 
 ---

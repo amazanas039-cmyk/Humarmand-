@@ -1,0 +1,101 @@
+@page
+@model Hunarmand.Pages.Admin.DisputesModel
+@{
+    ViewData["Title"] = "Disputes";
+    Layout = "~/Pages/Shared/_AdminLayout.cshtml";
+}
+
+<div class="admin-page-header">
+    <h1><i class="fa-solid fa-scale-balanced" style="color:var(--clr-primary-light);margin-right:10px;font-size:22px;"></i>Dispute Management</h1>
+    <div class="admin-page-header__meta">
+        <i class="fa-solid fa-circle" style="font-size:7px;color:var(--clr-danger);"></i>
+        <span>@Model.OpenDisputes.Count open disputes requiring attention</span>
+    </div>
+</div>
+
+@if (!string.IsNullOrEmpty(Model.Message))
+{
+    <div class="admin-alert admin-alert--@Model.MessageType">
+        <i class="fa-solid fa-@(Model.MessageType == "success" ? "check-circle" : "triangle-exclamation")"></i>
+        @Model.Message
+    </div>
+}
+
+<div class="admin-panel">
+    <div class="admin-panel__header">
+        <div class="admin-panel__title"><i class="fa-solid fa-scale-balanced"></i> Open Disputes</div>
+        <span class="badge badge--danger">@Model.OpenDisputes.Count Pending</span>
+    </div>
+    <div class="admin-panel__body">
+        @if (!Model.OpenDisputes.Any())
+        {
+            <div class="admin-empty">
+                <i class="fa-solid fa-scale-balanced" style="color:var(--clr-success);"></i>
+                <p>No open disputes. All resolved!</p>
+            </div>
+        }
+        else
+        {
+            @foreach (var d in Model.OpenDisputes)
+            {
+                <div class="admin-dispute-card">
+                    <div class="admin-dispute-card__header">
+                        <div>
+                            <span style="font-size:12px;color:var(--clr-text-muted);">Dispute #@d.DisputeID &bull; Job #@d.RequestID</span>
+                            <div style="font-weight:700;color:var(--clr-text-primary);margin-top:4px;">@(d.RaisedByName ?? "User") raised a dispute</div>
+                        </div>
+                        <span class="badge badge--danger" style="margin-left:auto;"><i class="fa-solid fa-clock"></i> Open</span>
+                    </div>
+                    <div class="admin-dispute-card__parties">
+                        <div class="admin-dispute-card__party">
+                            <i class="fa-solid fa-user" style="color:var(--clr-info);"></i>
+                            <span>Customer: <strong>@(d.CustomerName ?? "—")</strong></span>
+                        </div>
+                        <i class="fa-solid fa-arrows-left-right" style="color:var(--clr-text-muted);"></i>
+                        <div class="admin-dispute-card__party">
+                            <i class="fa-solid fa-helmet-safety" style="color:var(--clr-success);"></i>
+                            <span>Labourer: <strong>@(d.LabourerName ?? "—")</strong></span>
+                        </div>
+                    </div>
+                    <div class="admin-dispute-card__reason">
+                        <strong style="color:var(--clr-text-muted);font-size:11px;text-transform:uppercase;letter-spacing:.05em;">Reason</strong>
+                        <p style="margin-top:6px;color:var(--clr-text-secondary);font-size:13px;">@d.Reason</p>
+                    </div>
+                    <div style="padding:12px 20px;font-size:12px;color:var(--clr-text-muted);">
+                        Raised on @d.CreatedAt.ToString("MMM dd, yyyy — hh:mm tt")
+                    </div>
+                    <div class="admin-dispute-card__actions">
+                        <form method="post" asp-page-handler="Resolve" onsubmit="return confirmResolve(this, @d.DisputeID)">
+                            <input type="hidden" name="disputeId" value="@d.DisputeID" />
+                            <input type="hidden" name="resType" id="resType-@d.DisputeID" value="" />
+                            <input type="hidden" name="resText" id="resText-@d.DisputeID" value="" />
+                            <button type="submit" class="admin-btn admin-btn--success" data-id="@d.DisputeID" data-res="FavorCustomer">
+                                <i class="fa-solid fa-user-check"></i> Favour Customer
+                            </button>
+                            <button type="submit" class="admin-btn admin-btn--primary" data-id="@d.DisputeID" data-res="FavorLabourer">
+                                <i class="fa-solid fa-helmet-safety"></i> Favour Labourer
+                            </button>
+                            <button type="submit" class="admin-btn admin-btn--ghost" data-id="@d.DisputeID" data-res="Split">
+                                <i class="fa-solid fa-scale-balanced"></i> Split Decision
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>
+
+@section Scripts {
+<script>
+function confirmResolve(form, id) {
+    const btn = document.activeElement;
+    const resType = btn.getAttribute('data-res');
+    const resText = prompt(`Resolution note for dispute #${id} (${resType}):`);
+    if (!resText || resText.trim() === '') return false;
+    document.getElementById('resType-' + id).value = resType;
+    document.getElementById('resText-' + id).value = resText;
+    return true;
+}
+</script>
+}

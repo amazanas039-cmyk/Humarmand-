@@ -1,0 +1,91 @@
+@page
+@model Hunarmand.Pages.Admin.AnalyticsModel
+@{
+    ViewData["Title"] = "Analytics";
+    Layout = "~/Pages/Shared/_AdminLayout.cshtml";
+}
+
+<div class="admin-page-header">
+    <h1><i class="fa-solid fa-chart-line" style="color:var(--clr-primary-light);margin-right:10px;font-size:22px;"></i>Platform Analytics</h1>
+    <div class="admin-page-header__meta">
+        <i class="fa-solid fa-circle" style="font-size:7px;color:var(--clr-success);"></i>
+        <span>Real-time platform metrics</span>
+    </div>
+</div>
+
+<!-- KPI row -->
+<div class="admin-stats-grid" style="grid-template-columns:repeat(4,1fr);">
+    <div class="admin-stat-card" style="--stat-accent:#10B981;--stat-icon-bg:rgba(16,185,129,0.15);">
+        <div class="admin-stat-card__icon"><i class="fa-solid fa-briefcase-arrow-right"></i></div>
+        <div class="admin-stat-card__body">
+            <div class="admin-stat-card__value">@Model.TotalJobsCompleted</div>
+            <div class="admin-stat-card__label">Completed Jobs</div>
+        </div>
+    </div>
+    <div class="admin-stat-card" style="--stat-accent:#7C3AED;--stat-icon-bg:rgba(124,58,237,0.15);">
+        <div class="admin-stat-card__icon"><i class="fa-solid fa-star"></i></div>
+        <div class="admin-stat-card__body">
+            <div class="admin-stat-card__value">@Model.AverageRating.ToString("F2")</div>
+            <div class="admin-stat-card__label">Avg. Rating</div>
+        </div>
+    </div>
+    <div class="admin-stat-card" style="--stat-accent:#EF4444;--stat-icon-bg:rgba(239,68,68,0.15);">
+        <div class="admin-stat-card__icon"><i class="fa-solid fa-scale-balanced"></i></div>
+        <div class="admin-stat-card__body">
+            <div class="admin-stat-card__value">@Model.TotalDisputes</div>
+            <div class="admin-stat-card__label">Total Disputes</div>
+        </div>
+    </div>
+    <div class="admin-stat-card" style="--stat-accent:#F59E0B;--stat-icon-bg:rgba(245,158,11,0.15);">
+        <div class="admin-stat-card__icon"><i class="fa-solid fa-percent"></i></div>
+        <div class="admin-stat-card__body">
+            <div class="admin-stat-card__value">@Model.CompletionRate%</div>
+            <div class="admin-stat-card__label">Completion Rate</div>
+        </div>
+    </div>
+</div>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
+    <!-- Top Labourers -->
+    <div class="admin-panel">
+        <div class="admin-panel__header">
+            <div class="admin-panel__title"><i class="fa-solid fa-trophy"></i> Top Rated Labourers</div>
+        </div>
+        <table class="admin-table">
+            <thead><tr><th>Labourer</th><th>Category</th><th>Rating</th><th>Jobs</th></tr></thead>
+            <tbody>
+                @foreach (var l in Model.TopLabourers)
+                {
+                    <tr>
+                        <td>
+                            <span class="admin-table__avatar" style="background:linear-gradient(135deg,#10B981,#059669)">@(l.FullName?[0])</span>
+                            <span class="admin-table__name">@l.FullName</span>
+                        </td>
+                        <td>@l.CategoryName</td>
+                        <td><span style="color:var(--clr-warning);"><i class="fa-solid fa-star"></i> @l.ReputationScore.ToString("F1")</span></td>
+                        <td><span class="badge badge--success">@l.CompletionRate%</span></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Category breakdown -->
+    <div class="admin-panel">
+        <div class="admin-panel__header">
+            <div class="admin-panel__title"><i class="fa-solid fa-chart-pie"></i> Jobs by Category</div>
+        </div>
+        <div class="admin-bar-chart">
+            @foreach (var c in Model.CategoryBreakdown)
+            {
+                <div class="admin-bar-row">
+                    <div class="admin-bar-row__label">@c.Name</div>
+                    <div class="admin-bar-row__track">
+                        <div class="admin-bar-row__fill" style="width:@c.Percent%;"></div>
+                    </div>
+                    <div class="admin-bar-row__value">@c.Count</div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

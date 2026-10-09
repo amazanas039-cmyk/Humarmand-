@@ -1,0 +1,50 @@
+@page
+@model Hunarmand.Pages.Auth.LabourerLoginModel
+@{
+    ViewData["Title"] = "Labourer Login";
+    Layout = "_AuthLayout";
+}
+
+
+<div class="glass-card auth-card">
+
+    <div class="auth-card__logo">
+        <i class="fa-solid fa-screwdriver-wrench"></i>
+    </div>
+    <h1 class="auth-card__title">Labourer Portal</h1>
+    <p class="auth-card__subtitle">Sign in to find work, view earnings, and update availability</p>
+
+    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+    {
+        <div class="form-alert">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <span>@Model.ErrorMessage</span>
+        </div>
+    }
+
+    <form method="post">
+        <div class="form-group">
+            <label asp-for="Input.Email">Email Address</label>
+            <input asp-for="Input.Email" class="input-field" type="email" placeholder="e.g. professional@domain.com" required autocomplete="email" />
+            <span asp-validation-for="Input.Email" class="form-error"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Input.Password">Password</label>
+            <input asp-for="Input.Password" class="input-field" type="password" placeholder="••••••••" required autocomplete="current-password" />
+            <span asp-validation-for="Input.Password" class="form-error"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-full" style="margin-top: var(--space-md);">Sign In</button>
+        @Html.AntiForgeryToken()
+    </form>
+
+    <div class="auth-card__footer">
+        <p>Want to offer your services? <a href="/Auth/LabourerRegister">Register as Labourer</a></p>
+        <p style="margin-top: 10px; font-size: 13px;"><a href="/Auth" style="color: var(--clr-text-secondary);"><i class="fa-solid fa-arrow-left" style="margin-right: 6px;"></i>Choose another role</a></p>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

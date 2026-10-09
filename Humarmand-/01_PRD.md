@@ -1,5 +1,5 @@
 # 01 — Product Requirements Document (PRD)
-**Project:** SkillBridge v2 — On-Demand Labour Hiring Platform
+**Project:** Hunarmand v2 — On-Demand Labour Hiring Platform
 **Tagline:** *Connecting Skill to Need.*
 
 ---
@@ -8,7 +8,7 @@
 
 In Pakistan and the wider developing world, finding a reliable skilled labourer (electrician,
 plumber, carpenter, painter, mason, etc.) is opaque, unreliable, and informal — based on word of
-mouth with no verification, no standard rates, no accountability, and no records. SkillBridge
+mouth with no verification, no standard rates, no accountability, and no records. Hunarmand
 replaces this with a transparent, accountable, intelligent digital marketplace where:
 
 - Every labourer is **admin-verified** before going live.
@@ -150,10 +150,10 @@ with persistence. (See Design Brief §Motion — keep it tasteful and performant
 **What:** A premium marketing landing page matching the Aurora sample: editorial hero ("Elevate your
 …" style headline with a gradient word), social-proof avatars, primary/secondary CTAs, a floating
 **product-preview dashboard** mockup, and a features grid ("Everything you need to succeed"). Plus
-sections that explain SkillBridge: How it works (3 steps), categories, trust/verification, testimonials,
+sections that explain Hunarmand: How it works (3 steps), categories, trust/verification, testimonials,
 CTA, footer.
 **Acceptance:** Matches the layout & feel of the sample; fully responsive; light/dark; the hero
-preview can show a real-looking SkillBridge dashboard snapshot.
+preview can show a real-looking Hunarmand dashboard snapshot.
 
 ---
 
